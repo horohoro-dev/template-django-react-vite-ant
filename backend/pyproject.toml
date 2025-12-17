@@ -1,0 +1,19 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Django + DRF template backend"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "django==4.2.27",
+    "django-cors-headers==4.9.0",
+    "djangorestframework==3.16.1",
+    "drf-spectacular==0.29.0",
+    "djangorestframework-simplejwt==5.5.0",
+    "ruff>=0.14.8",
+    "django-stubs>=5.1.0",
+    "djangorestframework-stubs>=3.15.0",
+]
+
+[tool.pyright]
+typeCheckingMode = "off"

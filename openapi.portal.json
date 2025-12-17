@@ -1,0 +1,276 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Template API",
+    "version": "1.0.0",
+    "description": "Django + React Template API"
+  },
+  "paths": {
+    "/api/portal/posts/": {
+      "get": {
+        "operationId": "posts_list",
+        "description": "公開投稿のViewSet\n\n公開済み投稿の読み取り専用APIを提供する",
+        "summary": "List published posts",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "A page number within the paginated result set.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page_size",
+            "required": false,
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "public-posts"
+        ],
+        "security": [
+          {
+            "jwtAuth": []
+          },
+          {}
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedPublicPostListList"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/portal/posts/{id}/": {
+      "get": {
+        "operationId": "posts_retrieve",
+        "description": "公開投稿のViewSet\n\n公開済み投稿の読み取り専用APIを提供する",
+        "summary": "Get published post detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "A unique integer value identifying this post.",
+            "required": true
+          }
+        ],
+        "tags": [
+          "public-posts"
+        ],
+        "security": [
+          {
+            "jwtAuth": []
+          },
+          {}
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicPostDetail"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PaginatedPublicPostListList": {
+        "type": "object",
+        "required": [
+          "count",
+          "results"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "example": 123
+          },
+          "next": {
+            "type": "string",
+            "nullable": true,
+            "format": "uri",
+            "example": "http://api.example.org/accounts/?page=4"
+          },
+          "previous": {
+            "type": "string",
+            "nullable": true,
+            "format": "uri",
+            "example": "http://api.example.org/accounts/?page=2"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicPostList"
+            }
+          }
+        }
+      },
+      "PublicComment": {
+        "type": "object",
+        "description": "公開用コメントシリアライザー",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "readOnly": true
+          },
+          "author": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PublicUser"
+              }
+            ],
+            "readOnly": true
+          },
+          "content": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "author",
+          "content",
+          "created_at",
+          "id"
+        ]
+      },
+      "PublicPostDetail": {
+        "type": "object",
+        "description": "公開用投稿詳細シリアライザー",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "content": {
+            "type": "string"
+          },
+          "author": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PublicUser"
+              }
+            ],
+            "readOnly": true
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicComment"
+            },
+            "readOnly": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "author",
+          "comments",
+          "content",
+          "created_at",
+          "id",
+          "title"
+        ]
+      },
+      "PublicPostList": {
+        "type": "object",
+        "description": "公開用投稿一覧シリアライザー",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "author": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PublicUser"
+              }
+            ],
+            "readOnly": true
+          },
+          "comment_count": {
+            "type": "integer",
+            "description": "コメント数を取得\n\n:param obj: Postインスタンス\n:return: コメント数",
+            "readOnly": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "author",
+          "comment_count",
+          "created_at",
+          "id",
+          "title"
+        ]
+      },
+      "PublicUser": {
+        "type": "object",
+        "description": "公開用ユーザーシリアライザー",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "readOnly": true
+          },
+          "username": {
+            "type": "string",
+            "title": "ユーザー名",
+            "description": "この項目は必須です。半角アルファベット、半角数字、@/./+/-/_ で150文字以下にしてください。",
+            "pattern": "^[\\w.@+-]+$",
+            "maxLength": 150
+          }
+        },
+        "required": [
+          "id",
+          "username"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "jwtAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
