@@ -6,7 +6,7 @@
     "description": "Django + React Template API"
   },
   "paths": {
-    "/api/dashboard/comments/": {
+    "/api/v0/dashboard/comments/": {
       "get": {
         "operationId": "comments_list",
         "description": "コメントのViewSet\n\nコメントのCRUD操作を提供する",
@@ -98,7 +98,7 @@
         }
       }
     },
-    "/api/dashboard/comments/{id}/": {
+    "/api/v0/dashboard/comments/{id}/": {
       "get": {
         "operationId": "comments_retrieve",
         "description": "コメントのViewSet\n\nコメントのCRUD操作を提供する",
@@ -165,7 +165,7 @@
         }
       }
     },
-    "/api/dashboard/posts/": {
+    "/api/v0/dashboard/posts/": {
       "get": {
         "operationId": "posts_list",
         "description": "投稿のViewSet\n\n投稿のCRUD操作を提供する",
@@ -257,7 +257,7 @@
         }
       }
     },
-    "/api/dashboard/posts/{id}/": {
+    "/api/v0/dashboard/posts/{id}/": {
       "get": {
         "operationId": "posts_retrieve",
         "description": "投稿のViewSet\n\n投稿のCRUD操作を提供する",
@@ -435,7 +435,7 @@
         }
       }
     },
-    "/api/dashboard/users/me/": {
+    "/api/v0/dashboard/users/me/": {
       "get": {
         "operationId": "users_me_retrieve",
         "description": "現在のユーザー情報を取得\n\n:param request: リクエスト\n:return: ユーザー情報",

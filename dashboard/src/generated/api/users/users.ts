@@ -5,7 +5,9 @@
  * Django + React Template API
  * OpenAPI spec version: 1.0.0
  */
-
+import {
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -15,11 +17,13 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
-import { useQuery } from "@tanstack/react-query";
+  UseQueryResult
+} from '@tanstack/react-query';
 
-import { customInstance } from "../../../lib/axios";
+import { customInstance } from '../../../lib/axios';
+
+
+
 
 /**
  * 現在のユーザー情報を取得
@@ -28,142 +32,92 @@ import { customInstance } from "../../../lib/axios";
 :return: ユーザー情報
  * @summary Get current user
  */
-export const usersMeRetrieve = (signal?: AbortSignal) => {
-  return customInstance<void>({
-    url: `/api/dashboard/users/me/`,
-    method: "GET",
-    signal,
-  });
-};
+export const usersMeRetrieve = (
+    
+ signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v0/dashboard/users/me/`, method: 'GET', signal
+    },
+      );
+    }
+  
+
+
 
 export const getUsersMeRetrieveQueryKey = () => {
-  return [`/api/dashboard/users/me/`] as const;
-};
+    return [
+    `/api/v0/dashboard/users/me/`
+    ] as const;
+    }
 
-export const getUsersMeRetrieveQueryOptions = <
-  TData = Awaited<ReturnType<typeof usersMeRetrieve>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof usersMeRetrieve>>, TError, TData>
-  >;
-}) => {
-  const { query: queryOptions } = options ?? {};
+    
+export const getUsersMeRetrieveQueryOptions = <TData = Awaited<ReturnType<typeof usersMeRetrieve>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof usersMeRetrieve>>, TError, TData>>, }
+) => {
 
-  const queryKey = queryOptions?.queryKey ?? getUsersMeRetrieveQueryKey();
+const {query: queryOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof usersMeRetrieve>>> = ({
-    signal,
-  }) => usersMeRetrieve(signal);
+  const queryKey =  queryOptions?.queryKey ?? getUsersMeRetrieveQueryKey();
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof usersMeRetrieve>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+  
 
-export type UsersMeRetrieveQueryResult = NonNullable<
-  Awaited<ReturnType<typeof usersMeRetrieve>>
->;
-export type UsersMeRetrieveQueryError = unknown;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof usersMeRetrieve>>> = ({ signal }) => usersMeRetrieve(signal);
 
-export function useUsersMeRetrieve<
-  TData = Awaited<ReturnType<typeof usersMeRetrieve>>,
-  TError = unknown,
->(
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof usersMeRetrieve>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof usersMeRetrieve>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type UsersMeRetrieveQueryResult = NonNullable<Awaited<ReturnType<typeof usersMeRetrieve>>>
+export type UsersMeRetrieveQueryError = unknown
+
+
+export function useUsersMeRetrieve<TData = Awaited<ReturnType<typeof usersMeRetrieve>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof usersMeRetrieve>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof usersMeRetrieve>>,
           TError,
           Awaited<ReturnType<typeof usersMeRetrieve>>
-        >,
-        "initialData"
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useUsersMeRetrieve<
-  TData = Awaited<ReturnType<typeof usersMeRetrieve>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof usersMeRetrieve>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useUsersMeRetrieve<TData = Awaited<ReturnType<typeof usersMeRetrieve>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof usersMeRetrieve>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof usersMeRetrieve>>,
           TError,
           Awaited<ReturnType<typeof usersMeRetrieve>>
-        >,
-        "initialData"
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useUsersMeRetrieve<
-  TData = Awaited<ReturnType<typeof usersMeRetrieve>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof usersMeRetrieve>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useUsersMeRetrieve<TData = Awaited<ReturnType<typeof usersMeRetrieve>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof usersMeRetrieve>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get current user
  */
 
-export function useUsersMeRetrieve<
-  TData = Awaited<ReturnType<typeof usersMeRetrieve>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof usersMeRetrieve>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getUsersMeRetrieveQueryOptions(options);
+export function useUsersMeRetrieve<TData = Awaited<ReturnType<typeof usersMeRetrieve>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof usersMeRetrieve>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getUsersMeRetrieveQueryOptions(options)
 
-  query.queryKey = queryOptions.queryKey;
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+
+

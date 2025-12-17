@@ -5,7 +5,10 @@
  * Django + React Template API
  * OpenAPI spec version: 1.0.0
  */
-
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,17 +21,21 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { customInstance } from "../../../lib/axios";
+  UseQueryResult
+} from '@tanstack/react-query';
+
 import type {
   Comment,
   CommentCreate,
   CommentCreateRequest,
   CommentsListParams,
-  PaginatedCommentList,
-} from "../../schemas";
+  PaginatedCommentList
+} from '../../schemas';
+
+import { customInstance } from '../../../lib/axios';
+
+
+
 
 /**
  * コメントのViewSet
@@ -37,139 +44,94 @@ import type {
  * @summary List comments
  */
 export const commentsList = (
-  params?: CommentsListParams,
-  signal?: AbortSignal,
+    params?: CommentsListParams,
+ signal?: AbortSignal
 ) => {
-  return customInstance<PaginatedCommentList>({
-    url: `/api/dashboard/comments/`,
-    method: "GET",
-    params,
-    signal,
-  });
-};
+      
+      
+      return customInstance<PaginatedCommentList>(
+      {url: `/api/v0/dashboard/comments/`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
 
-export const getCommentsListQueryKey = (params?: CommentsListParams) => {
-  return [`/api/dashboard/comments/`, ...(params ? [params] : [])] as const;
-};
 
-export const getCommentsListQueryOptions = <
-  TData = Awaited<ReturnType<typeof commentsList>>,
-  TError = unknown,
->(
-  params?: CommentsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof commentsList>>, TError, TData>
-    >;
-  },
+
+export const getCommentsListQueryKey = (params?: CommentsListParams,) => {
+    return [
+    `/api/v0/dashboard/comments/`, ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getCommentsListQueryOptions = <TData = Awaited<ReturnType<typeof commentsList>>, TError = unknown>(params?: CommentsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof commentsList>>, TError, TData>>, }
 ) => {
-  const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getCommentsListQueryKey(params);
+const {query: queryOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof commentsList>>> = ({
-    signal,
-  }) => commentsList(params, signal);
+  const queryKey =  queryOptions?.queryKey ?? getCommentsListQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof commentsList>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+  
 
-export type CommentsListQueryResult = NonNullable<
-  Awaited<ReturnType<typeof commentsList>>
->;
-export type CommentsListQueryError = unknown;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof commentsList>>> = ({ signal }) => commentsList(params, signal);
 
-export function useCommentsList<
-  TData = Awaited<ReturnType<typeof commentsList>>,
-  TError = unknown,
->(
-  params: undefined | CommentsListParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof commentsList>>, TError, TData>
-    > &
-      Pick<
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof commentsList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type CommentsListQueryResult = NonNullable<Awaited<ReturnType<typeof commentsList>>>
+export type CommentsListQueryError = unknown
+
+
+export function useCommentsList<TData = Awaited<ReturnType<typeof commentsList>>, TError = unknown>(
+ params: undefined |  CommentsListParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof commentsList>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof commentsList>>,
           TError,
           Awaited<ReturnType<typeof commentsList>>
-        >,
-        "initialData"
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCommentsList<
-  TData = Awaited<ReturnType<typeof commentsList>>,
-  TError = unknown,
->(
-  params?: CommentsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof commentsList>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCommentsList<TData = Awaited<ReturnType<typeof commentsList>>, TError = unknown>(
+ params?: CommentsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof commentsList>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof commentsList>>,
           TError,
           Awaited<ReturnType<typeof commentsList>>
-        >,
-        "initialData"
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCommentsList<
-  TData = Awaited<ReturnType<typeof commentsList>>,
-  TError = unknown,
->(
-  params?: CommentsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof commentsList>>, TError, TData>
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCommentsList<TData = Awaited<ReturnType<typeof commentsList>>, TError = unknown>(
+ params?: CommentsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof commentsList>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary List comments
  */
 
-export function useCommentsList<
-  TData = Awaited<ReturnType<typeof commentsList>>,
-  TError = unknown,
->(
-  params?: CommentsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof commentsList>>, TError, TData>
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getCommentsListQueryOptions(params, options);
+export function useCommentsList<TData = Awaited<ReturnType<typeof commentsList>>, TError = unknown>(
+ params?: CommentsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof commentsList>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getCommentsListQueryOptions(params,options)
 
-  query.queryKey = queryOptions.queryKey;
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+
 
 /**
  * コメントのViewSet
@@ -178,245 +140,160 @@ export function useCommentsList<
  * @summary Create comment
  */
 export const commentsCreate = (
-  commentCreateRequest: CommentCreateRequest,
-  signal?: AbortSignal,
+    commentCreateRequest: CommentCreateRequest,
+ signal?: AbortSignal
 ) => {
-  return customInstance<CommentCreate>({
-    url: `/api/dashboard/comments/`,
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    data: commentCreateRequest,
-    signal,
-  });
-};
+      
+      
+      return customInstance<CommentCreate>(
+      {url: `/api/v0/dashboard/comments/`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: commentCreateRequest, signal
+    },
+      );
+    }
+  
 
-export const getCommentsCreateMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof commentsCreate>>,
-    TError,
-    { data: CommentCreateRequest },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof commentsCreate>>,
-  TError,
-  { data: CommentCreateRequest },
-  TContext
-> => {
-  const mutationKey = ["commentsCreate"];
-  const { mutation: mutationOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof commentsCreate>>,
-    { data: CommentCreateRequest }
-  > = (props) => {
-    const { data } = props ?? {};
+export const getCommentsCreateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof commentsCreate>>, TError,{data: CommentCreateRequest}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof commentsCreate>>, TError,{data: CommentCreateRequest}, TContext> => {
 
-    return commentsCreate(data);
-  };
+const mutationKey = ['commentsCreate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-  return { mutationFn, ...mutationOptions };
-};
+      
 
-export type CommentsCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof commentsCreate>>
->;
-export type CommentsCreateMutationBody = CommentCreateRequest;
-export type CommentsCreateMutationError = unknown;
 
-/**
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof commentsCreate>>, {data: CommentCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  commentsCreate(data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CommentsCreateMutationResult = NonNullable<Awaited<ReturnType<typeof commentsCreate>>>
+    export type CommentsCreateMutationBody = CommentCreateRequest
+    export type CommentsCreateMutationError = unknown
+
+    /**
  * @summary Create comment
  */
-export const useCommentsCreate = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof commentsCreate>>,
-      TError,
-      { data: CommentCreateRequest },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof commentsCreate>>,
-  TError,
-  { data: CommentCreateRequest },
-  TContext
-> => {
-  const mutationOptions = getCommentsCreateMutationOptions(options);
+export const useCommentsCreate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof commentsCreate>>, TError,{data: CommentCreateRequest}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof commentsCreate>>,
+        TError,
+        {data: CommentCreateRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient);
-};
-/**
+      const mutationOptions = getCommentsCreateMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    /**
  * コメントのViewSet
 
 コメントのCRUD操作を提供する
  * @summary Get comment detail
  */
-export const commentsRetrieve = (id: number, signal?: AbortSignal) => {
-  return customInstance<Comment>({
-    url: `/api/dashboard/comments/${id}/`,
-    method: "GET",
-    signal,
-  });
-};
-
-export const getCommentsRetrieveQueryKey = (id?: number) => {
-  return [`/api/dashboard/comments/${id}/`] as const;
-};
-
-export const getCommentsRetrieveQueryOptions = <
-  TData = Awaited<ReturnType<typeof commentsRetrieve>>,
-  TError = unknown,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof commentsRetrieve>>,
-        TError,
-        TData
-      >
-    >;
-  },
+export const commentsRetrieve = (
+    id: number,
+ signal?: AbortSignal
 ) => {
-  const { query: queryOptions } = options ?? {};
+      
+      
+      return customInstance<Comment>(
+      {url: `/api/v0/dashboard/comments/${id}/`, method: 'GET', signal
+    },
+      );
+    }
+  
 
-  const queryKey = queryOptions?.queryKey ?? getCommentsRetrieveQueryKey(id);
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof commentsRetrieve>>
-  > = ({ signal }) => commentsRetrieve(id, signal);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof commentsRetrieve>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+export const getCommentsRetrieveQueryKey = (id?: number,) => {
+    return [
+    `/api/v0/dashboard/comments/${id}/`
+    ] as const;
+    }
 
-export type CommentsRetrieveQueryResult = NonNullable<
-  Awaited<ReturnType<typeof commentsRetrieve>>
->;
-export type CommentsRetrieveQueryError = unknown;
+    
+export const getCommentsRetrieveQueryOptions = <TData = Awaited<ReturnType<typeof commentsRetrieve>>, TError = unknown>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof commentsRetrieve>>, TError, TData>>, }
+) => {
 
-export function useCommentsRetrieve<
-  TData = Awaited<ReturnType<typeof commentsRetrieve>>,
-  TError = unknown,
->(
-  id: number,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof commentsRetrieve>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getCommentsRetrieveQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof commentsRetrieve>>> = ({ signal }) => commentsRetrieve(id, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof commentsRetrieve>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type CommentsRetrieveQueryResult = NonNullable<Awaited<ReturnType<typeof commentsRetrieve>>>
+export type CommentsRetrieveQueryError = unknown
+
+
+export function useCommentsRetrieve<TData = Awaited<ReturnType<typeof commentsRetrieve>>, TError = unknown>(
+ id: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof commentsRetrieve>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof commentsRetrieve>>,
           TError,
           Awaited<ReturnType<typeof commentsRetrieve>>
-        >,
-        "initialData"
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCommentsRetrieve<
-  TData = Awaited<ReturnType<typeof commentsRetrieve>>,
-  TError = unknown,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof commentsRetrieve>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCommentsRetrieve<TData = Awaited<ReturnType<typeof commentsRetrieve>>, TError = unknown>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof commentsRetrieve>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof commentsRetrieve>>,
           TError,
           Awaited<ReturnType<typeof commentsRetrieve>>
-        >,
-        "initialData"
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCommentsRetrieve<
-  TData = Awaited<ReturnType<typeof commentsRetrieve>>,
-  TError = unknown,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof commentsRetrieve>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCommentsRetrieve<TData = Awaited<ReturnType<typeof commentsRetrieve>>, TError = unknown>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof commentsRetrieve>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get comment detail
  */
 
-export function useCommentsRetrieve<
-  TData = Awaited<ReturnType<typeof commentsRetrieve>>,
-  TError = unknown,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof commentsRetrieve>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getCommentsRetrieveQueryOptions(id, options);
+export function useCommentsRetrieve<TData = Awaited<ReturnType<typeof commentsRetrieve>>, TError = unknown>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof commentsRetrieve>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getCommentsRetrieveQueryOptions(id,options)
 
-  query.queryKey = queryOptions.queryKey;
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+
 
 /**
  * コメントのViewSet
@@ -424,76 +301,62 @@ export function useCommentsRetrieve<
 コメントのCRUD操作を提供する
  * @summary Delete comment
  */
-export const commentsDestroy = (id: number) => {
-  return customInstance<void>({
-    url: `/api/dashboard/comments/${id}/`,
-    method: "DELETE",
-  });
-};
+export const commentsDestroy = (
+    id: number,
+ ) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v0/dashboard/comments/${id}/`, method: 'DELETE'
+    },
+      );
+    }
+  
 
-export const getCommentsDestroyMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof commentsDestroy>>,
-    TError,
-    { id: number },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof commentsDestroy>>,
-  TError,
-  { id: number },
-  TContext
-> => {
-  const mutationKey = ["commentsDestroy"];
-  const { mutation: mutationOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof commentsDestroy>>,
-    { id: number }
-  > = (props) => {
-    const { id } = props ?? {};
+export const getCommentsDestroyMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof commentsDestroy>>, TError,{id: number}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof commentsDestroy>>, TError,{id: number}, TContext> => {
 
-    return commentsDestroy(id);
-  };
+const mutationKey = ['commentsDestroy'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-  return { mutationFn, ...mutationOptions };
-};
+      
 
-export type CommentsDestroyMutationResult = NonNullable<
-  Awaited<ReturnType<typeof commentsDestroy>>
->;
 
-export type CommentsDestroyMutationError = unknown;
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof commentsDestroy>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
 
-/**
+          return  commentsDestroy(id,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CommentsDestroyMutationResult = NonNullable<Awaited<ReturnType<typeof commentsDestroy>>>
+    
+    export type CommentsDestroyMutationError = unknown
+
+    /**
  * @summary Delete comment
  */
-export const useCommentsDestroy = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof commentsDestroy>>,
-      TError,
-      { id: number },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof commentsDestroy>>,
-  TError,
-  { id: number },
-  TContext
-> => {
-  const mutationOptions = getCommentsDestroyMutationOptions(options);
+export const useCommentsDestroy = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof commentsDestroy>>, TError,{id: number}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof commentsDestroy>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient);
-};
+      const mutationOptions = getCommentsDestroyMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    

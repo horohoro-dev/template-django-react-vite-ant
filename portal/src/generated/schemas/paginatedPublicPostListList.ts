@@ -5,7 +5,7 @@
  * Django + React Template API
  * OpenAPI spec version: 1.0.0
  */
-import type { PublicPostList } from "./publicPostList";
+import type { PublicPostList } from './publicPostList';
 
 export interface PaginatedPublicPostListList {
   count: number;

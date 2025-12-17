@@ -5,7 +5,7 @@
  * Django + React Template API
  * OpenAPI spec version: 1.0.0
  */
-import type { PublicUser } from "./publicUser";
+import type { PublicUser } from './publicUser';
 
 /**
  * 公開用投稿一覧シリアライザー

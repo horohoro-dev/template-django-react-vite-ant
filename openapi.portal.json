@@ -6,7 +6,7 @@
     "description": "Django + React Template API"
   },
   "paths": {
-    "/api/portal/posts/": {
+    "/api/v0/portal/posts/": {
       "get": {
         "operationId": "posts_list",
         "description": "公開投稿のViewSet\n\n公開済み投稿の読み取り専用APIを提供する",
@@ -54,7 +54,7 @@
         }
       }
     },
-    "/api/portal/posts/{id}/": {
+    "/api/v0/portal/posts/{id}/": {
       "get": {
         "operationId": "posts_retrieve",
         "description": "公開投稿のViewSet\n\n公開済み投稿の読み取り専用APIを提供する",

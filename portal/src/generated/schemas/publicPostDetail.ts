@@ -5,9 +5,8 @@
  * Django + React Template API
  * OpenAPI spec version: 1.0.0
  */
-
-import type { PublicComment } from "./publicComment";
-import type { PublicUser } from "./publicUser";
+import type { PublicUser } from './publicUser';
+import type { PublicComment } from './publicComment';
 
 /**
  * 公開用投稿詳細シリアライザー

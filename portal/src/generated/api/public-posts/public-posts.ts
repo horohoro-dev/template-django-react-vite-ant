@@ -5,7 +5,9 @@
  * Django + React Template API
  * OpenAPI spec version: 1.0.0
  */
-
+import {
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -15,15 +17,19 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
-import { useQuery } from "@tanstack/react-query";
-import { customInstance } from "../../../lib/axios";
+  UseQueryResult
+} from '@tanstack/react-query';
+
 import type {
   PaginatedPublicPostListList,
   PostsListParams,
-  PublicPostDetail,
-} from "../../schemas";
+  PublicPostDetail
+} from '../../schemas';
+
+import { customInstance } from '../../../lib/axios';
+
+
+
 
 /**
  * 公開投稿のViewSet
@@ -31,137 +37,95 @@ import type {
 公開済み投稿の読み取り専用APIを提供する
  * @summary List published posts
  */
-export const postsList = (params?: PostsListParams, signal?: AbortSignal) => {
-  return customInstance<PaginatedPublicPostListList>({
-    url: `/api/portal/posts/`,
-    method: "GET",
-    params,
-    signal,
-  });
-};
-
-export const getPostsListQueryKey = (params?: PostsListParams) => {
-  return [`/api/portal/posts/`, ...(params ? [params] : [])] as const;
-};
-
-export const getPostsListQueryOptions = <
-  TData = Awaited<ReturnType<typeof postsList>>,
-  TError = unknown,
->(
-  params?: PostsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof postsList>>, TError, TData>
-    >;
-  },
+export const postsList = (
+    params?: PostsListParams,
+ signal?: AbortSignal
 ) => {
-  const { query: queryOptions } = options ?? {};
+      
+      
+      return customInstance<PaginatedPublicPostListList>(
+      {url: `/api/v0/portal/posts/`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
 
-  const queryKey = queryOptions?.queryKey ?? getPostsListQueryKey(params);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof postsList>>> = ({
-    signal,
-  }) => postsList(params, signal);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof postsList>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+export const getPostsListQueryKey = (params?: PostsListParams,) => {
+    return [
+    `/api/v0/portal/posts/`, ...(params ? [params]: [])
+    ] as const;
+    }
 
-export type PostsListQueryResult = NonNullable<
-  Awaited<ReturnType<typeof postsList>>
->;
-export type PostsListQueryError = unknown;
+    
+export const getPostsListQueryOptions = <TData = Awaited<ReturnType<typeof postsList>>, TError = unknown>(params?: PostsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postsList>>, TError, TData>>, }
+) => {
 
-export function usePostsList<
-  TData = Awaited<ReturnType<typeof postsList>>,
-  TError = unknown,
->(
-  params: undefined | PostsListParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof postsList>>, TError, TData>
-    > &
-      Pick<
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getPostsListQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof postsList>>> = ({ signal }) => postsList(params, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof postsList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type PostsListQueryResult = NonNullable<Awaited<ReturnType<typeof postsList>>>
+export type PostsListQueryError = unknown
+
+
+export function usePostsList<TData = Awaited<ReturnType<typeof postsList>>, TError = unknown>(
+ params: undefined |  PostsListParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof postsList>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof postsList>>,
           TError,
           Awaited<ReturnType<typeof postsList>>
-        >,
-        "initialData"
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function usePostsList<
-  TData = Awaited<ReturnType<typeof postsList>>,
-  TError = unknown,
->(
-  params?: PostsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof postsList>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePostsList<TData = Awaited<ReturnType<typeof postsList>>, TError = unknown>(
+ params?: PostsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postsList>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof postsList>>,
           TError,
           Awaited<ReturnType<typeof postsList>>
-        >,
-        "initialData"
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function usePostsList<
-  TData = Awaited<ReturnType<typeof postsList>>,
-  TError = unknown,
->(
-  params?: PostsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof postsList>>, TError, TData>
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePostsList<TData = Awaited<ReturnType<typeof postsList>>, TError = unknown>(
+ params?: PostsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postsList>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary List published posts
  */
 
-export function usePostsList<
-  TData = Awaited<ReturnType<typeof postsList>>,
-  TError = unknown,
->(
-  params?: PostsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof postsList>>, TError, TData>
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getPostsListQueryOptions(params, options);
+export function usePostsList<TData = Awaited<ReturnType<typeof postsList>>, TError = unknown>(
+ params?: PostsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postsList>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getPostsListQueryOptions(params,options)
 
-  query.queryKey = queryOptions.queryKey;
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+
 
 /**
  * 公開投稿のViewSet
@@ -169,138 +133,92 @@ export function usePostsList<
 公開済み投稿の読み取り専用APIを提供する
  * @summary Get published post detail
  */
-export const postsRetrieve = (id: number, signal?: AbortSignal) => {
-  return customInstance<PublicPostDetail>({
-    url: `/api/portal/posts/${id}/`,
-    method: "GET",
-    signal,
-  });
-};
-
-export const getPostsRetrieveQueryKey = (id?: number) => {
-  return [`/api/portal/posts/${id}/`] as const;
-};
-
-export const getPostsRetrieveQueryOptions = <
-  TData = Awaited<ReturnType<typeof postsRetrieve>>,
-  TError = unknown,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof postsRetrieve>>, TError, TData>
-    >;
-  },
+export const postsRetrieve = (
+    id: number,
+ signal?: AbortSignal
 ) => {
-  const { query: queryOptions } = options ?? {};
+      
+      
+      return customInstance<PublicPostDetail>(
+      {url: `/api/v0/portal/posts/${id}/`, method: 'GET', signal
+    },
+      );
+    }
+  
 
-  const queryKey = queryOptions?.queryKey ?? getPostsRetrieveQueryKey(id);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof postsRetrieve>>> = ({
-    signal,
-  }) => postsRetrieve(id, signal);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof postsRetrieve>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+export const getPostsRetrieveQueryKey = (id?: number,) => {
+    return [
+    `/api/v0/portal/posts/${id}/`
+    ] as const;
+    }
 
-export type PostsRetrieveQueryResult = NonNullable<
-  Awaited<ReturnType<typeof postsRetrieve>>
->;
-export type PostsRetrieveQueryError = unknown;
+    
+export const getPostsRetrieveQueryOptions = <TData = Awaited<ReturnType<typeof postsRetrieve>>, TError = unknown>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postsRetrieve>>, TError, TData>>, }
+) => {
 
-export function usePostsRetrieve<
-  TData = Awaited<ReturnType<typeof postsRetrieve>>,
-  TError = unknown,
->(
-  id: number,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof postsRetrieve>>, TError, TData>
-    > &
-      Pick<
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getPostsRetrieveQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof postsRetrieve>>> = ({ signal }) => postsRetrieve(id, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof postsRetrieve>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type PostsRetrieveQueryResult = NonNullable<Awaited<ReturnType<typeof postsRetrieve>>>
+export type PostsRetrieveQueryError = unknown
+
+
+export function usePostsRetrieve<TData = Awaited<ReturnType<typeof postsRetrieve>>, TError = unknown>(
+ id: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof postsRetrieve>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof postsRetrieve>>,
           TError,
           Awaited<ReturnType<typeof postsRetrieve>>
-        >,
-        "initialData"
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function usePostsRetrieve<
-  TData = Awaited<ReturnType<typeof postsRetrieve>>,
-  TError = unknown,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof postsRetrieve>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePostsRetrieve<TData = Awaited<ReturnType<typeof postsRetrieve>>, TError = unknown>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postsRetrieve>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof postsRetrieve>>,
           TError,
           Awaited<ReturnType<typeof postsRetrieve>>
-        >,
-        "initialData"
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function usePostsRetrieve<
-  TData = Awaited<ReturnType<typeof postsRetrieve>>,
-  TError = unknown,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof postsRetrieve>>, TError, TData>
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePostsRetrieve<TData = Awaited<ReturnType<typeof postsRetrieve>>, TError = unknown>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postsRetrieve>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get published post detail
  */
 
-export function usePostsRetrieve<
-  TData = Awaited<ReturnType<typeof postsRetrieve>>,
-  TError = unknown,
->(
-  id: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof postsRetrieve>>, TError, TData>
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getPostsRetrieveQueryOptions(id, options);
+export function usePostsRetrieve<TData = Awaited<ReturnType<typeof postsRetrieve>>, TError = unknown>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postsRetrieve>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getPostsRetrieveQueryOptions(id,options)
 
-  query.queryKey = queryOptions.queryKey;
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+
+

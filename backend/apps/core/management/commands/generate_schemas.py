@@ -6,6 +6,7 @@ dashboard用とportal用のOpenAPIスキーマを別々に生成する
 import json
 from pathlib import Path
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from drf_spectacular.generators import SchemaGenerator
 
@@ -40,6 +41,7 @@ class Command(BaseCommand):
         :param options: キーワード引数
         """
         output_dir = Path(options['output_dir'])
+        api_version = settings.API_VERSION
 
         # Dashboard API schema
         self.stdout.write('Generating dashboard API schema...')
@@ -52,7 +54,7 @@ class Command(BaseCommand):
         # パスにプレフィックスを追加
         dashboard_paths = {}
         for path, operations in dashboard_schema.get('paths', {}).items():
-            dashboard_paths[f'/api/dashboard{path}'] = operations
+            dashboard_paths[f'/api/{api_version}/dashboard{path}'] = operations
         dashboard_schema['paths'] = dashboard_paths
 
         dashboard_output = output_dir / 'openapi.dashboard.json'
@@ -73,7 +75,7 @@ class Command(BaseCommand):
         # パスにプレフィックスを追加
         portal_paths = {}
         for path, operations in portal_schema.get('paths', {}).items():
-            portal_paths[f'/api/portal{path}'] = operations
+            portal_paths[f'/api/{api_version}/portal{path}'] = operations
         portal_schema['paths'] = portal_paths
 
         portal_output = output_dir / 'openapi.portal.json'

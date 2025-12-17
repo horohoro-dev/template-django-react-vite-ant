@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_BASE_URL, axiosInstance } from "@/lib/axios";
+import { API_BASE_URL, API_VERSION, axiosInstance } from "@/lib/axios";
 import { ROUTES_PATHS } from "@/routes/paths";
 import { useBoundStore } from "@/stores";
 
@@ -26,7 +26,7 @@ export const useAuth = () => {
     try {
       // Get JWT token
       const tokenResponse = await axiosInstance.post(
-        `${API_BASE_URL}/api/token/`,
+        `${API_BASE_URL}/api/${API_VERSION}/token/`,
         credentials,
       );
       const { access, refresh } = tokenResponse.data;
@@ -36,7 +36,7 @@ export const useAuth = () => {
 
       // Get user info
       const userResponse = await axiosInstance.get(
-        `${API_BASE_URL}/api/dashboard/users/me/`,
+        `${API_BASE_URL}/api/${API_VERSION}/dashboard/users/me/`,
       );
       const user = userResponse.data;
 

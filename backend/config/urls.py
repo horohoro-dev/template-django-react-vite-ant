@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import (
@@ -26,43 +27,45 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+API_VERSION = settings.API_VERSION
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     # JWT endpoints
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path(f'api/{API_VERSION}/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path(f'api/{API_VERSION}/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # API endpoints
-    path('api/dashboard/', include('apps.api.dashboard.urls')),
-    path('api/portal/', include('apps.api.portal.urls')),
+    path(f'api/{API_VERSION}/dashboard/', include('apps.api.dashboard.urls')),
+    path(f'api/{API_VERSION}/portal/', include('apps.api.portal.urls')),
     # OpenAPI Schema - Dashboard
     path(
-        'api/schema/dashboard/',
+        f'api/{API_VERSION}/schema/dashboard/',
         SpectacularAPIView.as_view(urlconf='apps.api.dashboard.urls'),
         name='schema-dashboard',
     ),
     path(
-        'api/schema/dashboard/swagger/',
+        f'api/{API_VERSION}/schema/dashboard/swagger/',
         SpectacularSwaggerView.as_view(url_name='schema-dashboard'),
         name='swagger-ui-dashboard',
     ),
     path(
-        'api/schema/dashboard/redoc/',
+        f'api/{API_VERSION}/schema/dashboard/redoc/',
         SpectacularRedocView.as_view(url_name='schema-dashboard'),
         name='redoc-dashboard',
     ),
     # OpenAPI Schema - Portal
     path(
-        'api/schema/portal/',
+        f'api/{API_VERSION}/schema/portal/',
         SpectacularAPIView.as_view(urlconf='apps.api.portal.urls'),
         name='schema-portal',
     ),
     path(
-        'api/schema/portal/swagger/',
+        f'api/{API_VERSION}/schema/portal/swagger/',
         SpectacularSwaggerView.as_view(url_name='schema-portal'),
         name='swagger-ui-portal',
     ),
     path(
-        'api/schema/portal/redoc/',
+        f'api/{API_VERSION}/schema/portal/redoc/',
         SpectacularRedocView.as_view(url_name='schema-portal'),
         name='redoc-portal',
     ),
