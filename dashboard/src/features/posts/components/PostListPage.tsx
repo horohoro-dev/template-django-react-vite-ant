@@ -170,7 +170,14 @@ const PostListContent: React.FC = () => {
   };
 
   if (error) {
-    return <Alert type="error" title="Error" description="Failed to load posts" showIcon />;
+    return (
+      <Alert
+        type="error"
+        title="Error"
+        description="Failed to load posts"
+        showIcon
+      />
+    );
   }
 
   return (
