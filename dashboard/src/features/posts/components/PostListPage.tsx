@@ -140,7 +140,7 @@ const PostListContent: React.FC = () => {
                 id: record.id,
                 title: record.title,
                 content: "",
-                is_published: record.is_published,
+                is_published: record.is_published ?? false,
               })
             }
           />
